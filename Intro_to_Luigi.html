@@ -13139,18 +13139,25 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Data-Pipelines">Data Pipelines<a class="anchor-link" href="#Data-Pipelines">&#182;</a></h1><h2 id="Imperative-Programming">Imperative Programming<a class="anchor-link" href="#Imperative-Programming">&#182;</a></h2>
-<pre><code>dates = ['2019-04-01', '2019-04-02']
+<pre><code>data = []
+dates = ['2019-04-01', '2019-04-02']
 for date in dates:
     input1 = get_input1_data(date)
     output1 = make_output0(date, input1)
 
     input2 = get_input2_data(date)
-    output2 = make_output1(date, input2, output1)</code></pre>
+    output2 = make_output1(date, input2, output1)
+
+    data.append([output1, output2])
+
+# debugging + recovering from errors?
+# starting from half-done?
+# making new outputs?</code></pre>
 <h2 id="Flow-based-Programming">Flow-based Programming<a class="anchor-link" href="#Flow-based-Programming">&#182;</a></h2><ul>
 <li>specify Tasks with inputs+outputs</li>
 <li>let the framework decide how to execute the code</li>
 </ul>
-<p><code>luigi --module examples.py MakeData --first 2019-04-01 --last 2019-04-02</code></p>
+<p><code>luigi --module examples.py MakeData --first 2019-04-09 --last 2019-04-10</code></p>
 <p><img src="./example_dependency_graph.png" alt="dependency graph"></p>
 
 </div>
@@ -13247,10 +13254,43 @@ Author: The Luigi Authors
 Author-email: None
 License: Apache License 2.0
 Location: /home/harry/miniconda3/envs/luigi_talk/lib/python3.7/site-packages
-Requires: python-daemon, python-dateutil, tornado
+Requires: tornado, python-dateutil, python-daemon
 Required-by: 
 </pre>
 </div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="k">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&lt;style&gt;.container { width:100% !important; }&lt;/style&gt;&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<style>.container { width:100% !important; }</style>
+</div>
+
 </div>
 
 </div>
@@ -13351,7 +13391,7 @@ Required-by:
 <pre>task: DayName(date=2019-04-09)
 task.complete(): False
 
-target: &lt;luigi.local_target.LocalTarget object at 0x7fdb184e14a8&gt;
+target: &lt;luigi.local_target.LocalTarget object at 0x7f5a602a1668&gt;
 target.path: /tmp/luigi_talk_examples/DayName_2019-04-09.txt
 target.exists(): False
 </pre>
@@ -13396,10 +13436,10 @@ target.exists(): False
 <pre>INFO: Informed scheduler that task   DayName_2019_04_09_2e0ba28ae6   has status   PENDING
 INFO: Done scheduling tasks
 INFO: Running Worker with 1 processes
-INFO: [pid 995] Worker Worker(salt=666708526, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-09)
-INFO: [pid 995] Worker Worker(salt=666708526, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-09)
+INFO: [pid 74] Worker Worker(salt=376876960, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayName(date=2019-04-09)
+INFO: [pid 74] Worker Worker(salt=376876960, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      DayName(date=2019-04-09)
 INFO: Informed scheduler that task   DayName_2019_04_09_2e0ba28ae6   has status   DONE
-INFO: Worker Worker(salt=666708526, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) was stopped. Shutting down Keep-Alive thread
+INFO: Worker Worker(salt=376876960, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) was stopped. Shutting down Keep-Alive thread
 INFO: 
 ===== Luigi Execution Summary =====
 
@@ -13526,7 +13566,7 @@ This progress looks :) because there were no failed tasks or missing dependencie
 <pre>INFO: Informed scheduler that task   DayName_2019_04_09_2e0ba28ae6   has status   DONE
 INFO: Done scheduling tasks
 INFO: Running Worker with 1 processes
-INFO: Worker Worker(salt=196329746, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) was stopped. Shutting down Keep-Alive thread
+INFO: Worker Worker(salt=706858153, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) was stopped. Shutting down Keep-Alive thread
 INFO: 
 ===== Luigi Execution Summary =====
 
@@ -13610,8 +13650,8 @@ This progress looks :) because there were no failed tasks or missing dependencie
 <pre>INFO: Informed scheduler that task   DayNameErrorful_2019_04_09_2e0ba28ae6   has status   PENDING
 INFO: Done scheduling tasks
 INFO: Running Worker with 1 processes
-INFO: [pid 995] Worker Worker(salt=861502796, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameErrorful(date=2019-04-09)
-ERROR: [pid 995] Worker Worker(salt=861502796, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) failed    DayNameErrorful(date=2019-04-09)
+INFO: [pid 74] Worker Worker(salt=574673838, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayNameErrorful(date=2019-04-09)
+ERROR: [pid 74] Worker Worker(salt=574673838, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) failed    DayNameErrorful(date=2019-04-09)
 Traceback (most recent call last):
   File &#34;/home/harry/miniconda3/envs/luigi_talk/lib/python3.7/site-packages/luigi/worker.py&#34;, line 199, in run
     new_deps = self._run_get_new_deps()
@@ -13621,7 +13661,7 @@ Traceback (most recent call last):
     fd.write(self.date(&#39;%A&#39;))  # will error but makes an empty file
 TypeError: &#39;datetime.date&#39; object is not callable
 INFO: Informed scheduler that task   DayNameErrorful_2019_04_09_2e0ba28ae6   has status   FAILED
-INFO: Worker Worker(salt=861502796, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) was stopped. Shutting down Keep-Alive thread
+INFO: Worker Worker(salt=574673838, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) was stopped. Shutting down Keep-Alive thread
 INFO: 
 ===== Luigi Execution Summary =====
 
@@ -13678,8 +13718,8 @@ This progress looks :( because there were failed tasks
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>total 0
--rw-rw-rw- 1 harry harry 7 Apr  8 21:11 DayName_2019-04-09.txt
--rw-rw-rw- 1 harry harry 0 Apr  8 21:11 DayNameErrorful_2019-04-09.txt
+-rw-rw-rw- 1 harry harry 7 Apr  9 16:38 DayName_2019-04-09.txt
+-rw-rw-rw- 1 harry harry 0 Apr  9 16:38 DayNameErrorful_2019-04-09.txt
 </pre>
 </div>
 </div>
@@ -13717,7 +13757,7 @@ This progress looks :( because there were failed tasks
 <pre>INFO: Informed scheduler that task   DayNameErrorful_2019_04_09_2e0ba28ae6   has status   DONE
 INFO: Done scheduling tasks
 INFO: Running Worker with 1 processes
-INFO: Worker Worker(salt=808694888, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) was stopped. Shutting down Keep-Alive thread
+INFO: Worker Worker(salt=942812875, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) was stopped. Shutting down Keep-Alive thread
 INFO: 
 ===== Luigi Execution Summary =====
 
@@ -13850,10 +13890,10 @@ This progress looks :) because there were no failed tasks or missing dependencie
 INFO: Informed scheduler that task   DayName_2019_04_09_2e0ba28ae6   has status   DONE
 INFO: Done scheduling tasks
 INFO: Running Worker with 1 processes
-INFO: [pid 995] Worker Worker(salt=441737586, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-09)
-INFO: [pid 995] Worker Worker(salt=441737586, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-09)
+INFO: [pid 74] Worker Worker(salt=709494939, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayNameFrench(date=2019-04-09)
+INFO: [pid 74] Worker Worker(salt=709494939, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      DayNameFrench(date=2019-04-09)
 INFO: Informed scheduler that task   DayNameFrench_2019_04_09_2e0ba28ae6   has status   DONE
-INFO: Worker Worker(salt=441737586, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) was stopped. Shutting down Keep-Alive thread
+INFO: Worker Worker(salt=709494939, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) was stopped. Shutting down Keep-Alive thread
 INFO: 
 ===== Luigi Execution Summary =====
 
@@ -13949,13 +13989,13 @@ DayNameErrorful_2019-04-09.txt
 INFO: Informed scheduler that task   DayName_2019_04_08_f7ae138f92   has status   PENDING
 INFO: Done scheduling tasks
 INFO: Running Worker with 1 processes
-INFO: [pid 995] Worker Worker(salt=493044837, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-08)
-INFO: [pid 995] Worker Worker(salt=493044837, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-08)
+INFO: [pid 74] Worker Worker(salt=701873738, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayName(date=2019-04-08)
+INFO: [pid 74] Worker Worker(salt=701873738, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      DayName(date=2019-04-08)
 INFO: Informed scheduler that task   DayName_2019_04_08_f7ae138f92   has status   DONE
-INFO: [pid 995] Worker Worker(salt=493044837, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-08)
-INFO: [pid 995] Worker Worker(salt=493044837, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-08)
+INFO: [pid 74] Worker Worker(salt=701873738, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayNameFrench(date=2019-04-08)
+INFO: [pid 74] Worker Worker(salt=701873738, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      DayNameFrench(date=2019-04-08)
 INFO: Informed scheduler that task   DayNameFrench_2019_04_08_f7ae138f92   has status   DONE
-INFO: Worker Worker(salt=493044837, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) was stopped. Shutting down Keep-Alive thread
+INFO: Worker Worker(salt=701873738, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) was stopped. Shutting down Keep-Alive thread
 INFO: 
 ===== Luigi Execution Summary =====
 
@@ -14116,22 +14156,22 @@ INFO: Informed scheduler that task   DayNameFrench_2019_04_01_5b092e82ff   has s
 INFO: Informed scheduler that task   DayName_2019_04_01_5b092e82ff   has status   PENDING
 INFO: Done scheduling tasks
 INFO: Running Worker with 1 processes
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-02)
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-02)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayName(date=2019-04-02)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      DayName(date=2019-04-02)
 INFO: Informed scheduler that task   DayName_2019_04_02_2ffbc63b3b   has status   DONE
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-02)
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-02)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayNameFrench(date=2019-04-02)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      DayNameFrench(date=2019-04-02)
 INFO: Informed scheduler that task   DayNameFrench_2019_04_02_2ffbc63b3b   has status   DONE
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-01)
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-01)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayName(date=2019-04-01)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      DayName(date=2019-04-01)
 INFO: Informed scheduler that task   DayName_2019_04_01_5b092e82ff   has status   DONE
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-01)
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-01)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   DayNameFrench(date=2019-04-01)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      DayNameFrench(date=2019-04-01)
 INFO: Informed scheduler that task   DayNameFrench_2019_04_01_5b092e82ff   has status   DONE
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   SummaryCsv(first=2019-04-01, last=2019-04-02)
-INFO: [pid 995] Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      SummaryCsv(first=2019-04-01, last=2019-04-02)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) running   SummaryCsv(first=2019-04-01, last=2019-04-02)
+INFO: [pid 74] Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) done      SummaryCsv(first=2019-04-01, last=2019-04-02)
 INFO: Informed scheduler that task   SummaryCsv_2019_04_01_2019_04_02_2fcce54d60   has status   DONE
-INFO: Worker Worker(salt=453580385, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=995) was stopped. Shutting down Keep-Alive thread
+INFO: Worker Worker(salt=249099519, workers=1, host=DESKTOP-4FKKS4Q, username=harry, pid=74) was stopped. Shutting down Keep-Alive thread
 INFO: 
 ===== Luigi Execution Summary =====
 
@@ -14207,10 +14247,10 @@ This progress looks :) because there were no failed tasks or missing dependencie
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># luigi --module examples SummaryCsv --first 2019-04-01 --last 2019-04-09 --workers 2 --local-scheduler</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># luigi --module examples SummaryCsv --first 2019-04-01 --last 2019-04-09 --workers 4 --local-scheduler</span>
 <span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
     <span class="p">[</span><span class="n">SummaryCsv</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">last</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">9</span><span class="p">))],</span>
     <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -14219,107 +14259,6 @@ This progress looks :) because there were no failed tasks or missing dependencie
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>INFO: Informed scheduler that task   SummaryCsv_2019_04_01_2019_04_09_8cae33bd38   has status   PENDING
-INFO: Informed scheduler that task   DayNameFrench_2019_04_09_2e0ba28ae6   has status   DONE
-INFO: Informed scheduler that task   DayName_2019_04_09_2e0ba28ae6   has status   DONE
-INFO: Informed scheduler that task   DayNameFrench_2019_04_08_f7ae138f92   has status   DONE
-INFO: Informed scheduler that task   DayName_2019_04_08_f7ae138f92   has status   DONE
-INFO: Informed scheduler that task   DayNameFrench_2019_04_07_a2e5915326   has status   PENDING
-INFO: Informed scheduler that task   DayName_2019_04_07_a2e5915326   has status   PENDING
-INFO: Informed scheduler that task   DayNameFrench_2019_04_06_51936945fc   has status   PENDING
-INFO: Informed scheduler that task   DayName_2019_04_06_51936945fc   has status   PENDING
-INFO: Informed scheduler that task   DayNameFrench_2019_04_05_05bf79bc57   has status   PENDING
-INFO: Informed scheduler that task   DayName_2019_04_05_05bf79bc57   has status   PENDING
-INFO: Informed scheduler that task   DayNameFrench_2019_04_04_caac5dbb84   has status   PENDING
-INFO: Informed scheduler that task   DayName_2019_04_04_caac5dbb84   has status   PENDING
-INFO: Informed scheduler that task   DayNameFrench_2019_04_03_5b65292755   has status   PENDING
-INFO: Informed scheduler that task   DayName_2019_04_03_5b65292755   has status   PENDING
-INFO: Informed scheduler that task   DayNameFrench_2019_04_02_2ffbc63b3b   has status   DONE
-INFO: Informed scheduler that task   DayName_2019_04_02_2ffbc63b3b   has status   DONE
-INFO: Informed scheduler that task   DayNameFrench_2019_04_01_5b092e82ff   has status   DONE
-INFO: Informed scheduler that task   DayName_2019_04_01_5b092e82ff   has status   DONE
-INFO: Done scheduling tasks
-INFO: Running Worker with 4 processes
-INFO: [pid 1044] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-07)
-INFO: [pid 1045] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-04)
-INFO: [pid 1050] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-06)
-INFO: [pid 1053] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-05)
-INFO: [pid 1044] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-07)
-INFO: Informed scheduler that task   DayName_2019_04_07_a2e5915326   has status   DONE
-INFO: [pid 1045] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-04)
-INFO: Informed scheduler that task   DayName_2019_04_04_caac5dbb84   has status   DONE
-INFO: [pid 1059] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayName(date=2019-04-03)
-INFO: [pid 1050] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-06)
-INFO: [pid 1053] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-05)
-INFO: Informed scheduler that task   DayName_2019_04_06_51936945fc   has status   DONE
-INFO: [pid 1067] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-04)
-INFO: Informed scheduler that task   DayName_2019_04_05_05bf79bc57   has status   DONE
-INFO: [pid 1074] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-06)
-INFO: [pid 1077] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-05)
-INFO: [pid 1067] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-04)
-INFO: Informed scheduler that task   DayNameFrench_2019_04_04_caac5dbb84   has status   DONE
-INFO: [pid 1083] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-07)
-INFO: [pid 1074] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-06)
-INFO: Informed scheduler that task   DayNameFrench_2019_04_06_51936945fc   has status   DONE
-INFO: [pid 1077] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-05)
-INFO: Informed scheduler that task   DayNameFrench_2019_04_05_05bf79bc57   has status   DONE
-INFO: [pid 1083] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-07)
-INFO: Informed scheduler that task   DayNameFrench_2019_04_07_a2e5915326   has status   DONE
-INFO: [pid 1059] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayName(date=2019-04-03)
-INFO: Informed scheduler that task   DayName_2019_04_03_5b65292755   has status   DONE
-INFO: [pid 1098] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   DayNameFrench(date=2019-04-03)
-INFO: [pid 1098] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      DayNameFrench(date=2019-04-03)
-INFO: Informed scheduler that task   DayNameFrench_2019_04_03_5b65292755   has status   DONE
-INFO: [pid 1104] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) running   SummaryCsv(first=2019-04-01, last=2019-04-09)
-INFO: [pid 1104] Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) done      SummaryCsv(first=2019-04-01, last=2019-04-09)
-INFO: Informed scheduler that task   SummaryCsv_2019_04_01_2019_04_09_8cae33bd38   has status   DONE
-INFO: Worker Worker(salt=709989038, workers=4, host=DESKTOP-4FKKS4Q, username=harry, pid=995) was stopped. Shutting down Keep-Alive thread
-INFO: 
-===== Luigi Execution Summary =====
-
-Scheduled 19 tasks of which:
-* 8 complete ones were encountered:
-    - 4 DayName(date=2019-04-01,2019-04-02,2019-04-08,2019-04-09)
-    - 4 DayNameFrench(date=2019-04-01,2019-04-02,2019-04-08,2019-04-09)
-* 11 ran successfully:
-    - 5 DayName(date=2019-04-03...2019-04-07)
-    - 5 DayNameFrench(date=2019-04-03...2019-04-07)
-    - 1 SummaryCsv(first=2019-04-01, last=2019-04-09)
-
-This progress looks :) because there were no failed tasks or missing dependencies
-
-===== Luigi Execution Summary =====
-
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[22]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>True</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
